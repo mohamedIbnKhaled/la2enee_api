@@ -133,13 +133,14 @@ def finder_post(file_stream, uid):
                 "seekertoken":seekerToken
             }
         )
-        massagee="we happy to say that we found someone for you 😊 "
-        body= massage.createBody(finderToken, massagee,title="founded")
+        massageefinder="we happy to say that we found one you are searching for  for you 😊"
+        massageeseeker="we happy to say that we know the name of person you found 😊"
+        body= massage.createBody(finderToken, massageefinder,title="founded")
         response=massage.massaging(body)
-        body= massage.createBody(seekerToken, massagee,title="founded")
+        body= massage.createBody(seekerToken, massageeseeker,title="founded")
         response=massage.massaging(body)
         docName.reference.delete()
-        return jsonify({"result": True})
+        return jsonify({"result": True,"finderID": uid,"seekerID":seekeruid})
 
     else:
         # if there is no known_vector that same as unknown so upload this vector so we can use it again
@@ -199,13 +200,14 @@ def seeker_post(file_stream, uid):
                 "seekertoken":seekerToken
             }
         )
-        massagee="we happy to say that we found someone for you 😊"
-        body= massage.createBody(finderToken, massagee,title="founded")
+        massageefinder="we happy to say that we found one you are searching for  for you 😊"
+        massageeseeker="we happy to say that we know the name of person you found 😊"
+        body= massage.createBody(finderToken, massageefinder,title="founded")
         response=massage.massaging(body)
-        body= massage.createBody(seekerToken, massagee,title="founded")
+        body= massage.createBody(seekerToken, massageeseeker,title="founded")
         response=massage.massaging(body)
         docName.reference.delete()
-        return jsonify({"result": True})
+        return jsonify({"result": True,"finderID":finderuid,"seekerID":uid})
     else:
         doc_ref = db.collection("known_vectors").document(uid)
         doc_ref.set({"uid": uid, "vector": vector_known_list})
@@ -221,7 +223,7 @@ def likes(ID,userName):
     user=db.collection("users").document(ID).get()
     deviceToken=user['token']
     massagee=userName+" liked your post"
-    body=massage.createBody(deviceToken,massagee)
+    body=massage.createBody(deviceToken,massagee,title="someone liked your post")
     print(type(body))
     response=massage.massaging(body)
     data={userName : massagee}
