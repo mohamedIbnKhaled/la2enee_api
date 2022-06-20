@@ -78,7 +78,7 @@ def upload_image_seeker():
         return seeker_post(file, uid)
 
 
-# someone find a person and he dont know his/her name
+# someone find a person and he dont know his/her  name
 def finder_post(file_stream, uid):
     # this function searching in seeker posts
     # encode the image that u take from post
