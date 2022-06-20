@@ -3,15 +3,17 @@ from dotenv import load_dotenv
 import requests
 import json
 load_dotenv()
-def createBody(deviceToken,massage):
+def createBody(deviceToken,massage,title):
     body = {
-        "notification": {"title": "likes", "body":massage },
+        "notification": {"title": title, "body":massage ,
+        "click_action": "FLUTTER_NOTIFICATION_CLICK", },
         "to": deviceToken,
         "priority": "high",
+        "screen": "screenA",
     }
     return body
 
-def massaging(deviceToken,body):
+def massaging(body):
     serverToken = os.environ['serverToken']
     headers = {
         "Content-Type": "application/json",

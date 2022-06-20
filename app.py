@@ -133,34 +133,11 @@ def finder_post(file_stream, uid):
                 "seekertoken":seekerToken
             }
         )
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "key=" + serverToken,
-        }
-        body = {
-            "notification": {"title": "", "body": "ana elseeker nta meen"},
-            "to": finderToken,
-            "priority": "high",
-        }
-        response = requests.post(
-            "https://fcm.googleapis.com/fcm/send",
-            headers=headers,
-            data=json.dumps(body),
-        )
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "key=" + serverToken,
-        }
-        body = {
-            "notification": {"title": "", "body": "ana finder nta meen"},
-            "to": seekerToken,
-            "priority": "high",
-        }
-        response = requests.post(
-            "https://fcm.googleapis.com/fcm/send",
-            headers=headers,
-            data=json.dumps(body),
-        )
+        massagee="we happy to say that we found someone for you 😊 "
+        body= massage.createBody(finderToken, massagee,title="founded")
+        response=massage.massaging(body)
+        body= massage.createBody(seekerToken, massagee,title="founded")
+        response=massage.massaging(body)
         docName.reference.delete()
         return jsonify({"result": True})
 
@@ -222,34 +199,11 @@ def seeker_post(file_stream, uid):
                 "seekertoken":seekerToken
             }
         )
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "key=" + serverToken,
-        }
-        body = {
-            "notification": {"title": "", "body": "ana elseeker nta meen"},
-            "to": finderToken,
-            "priority": "high",
-        }
-        response = requests.post(
-            "https://fcm.googleapis.com/fcm/send",
-            headers=headers,
-            data=json.dumps(body),
-        )
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "key=" + serverToken,
-        }
-        body = {
-            "notification": {"title": "", "body": "ana finder nta meen"},
-            "to": seekerToken,
-            "priority": "high",
-        }
-        response = requests.post(
-            "https://fcm.googleapis.com/fcm/send",
-            headers=headers,
-            data=json.dumps(body),
-        )
+        massagee="we happy to say that we found someone for you 😊"
+        body= massage.createBody(finderToken, massagee,title="founded")
+        response=massage.massaging(body)
+        body= massage.createBody(seekerToken, massagee,title="founded")
+        response=massage.massaging(body)
         docName.reference.delete()
         return jsonify({"result": True})
     else:
@@ -269,7 +223,7 @@ def likes(ID,userName):
     massagee=userName+" liked your post"
     body=massage.createBody(deviceToken,massagee)
     print(type(body))
-    response=massage.massaging(deviceToken,body)
+    response=massage.massaging(body)
     data={userName : massagee}
     print(docName.title())
     user.collection('notification').document(f'likes').add(data)
