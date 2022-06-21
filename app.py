@@ -221,18 +221,14 @@ def put_likes_infire():
     return likes(id,userName)
 
 def likes(ID,userName):
-    profiles_stream = db.collection("users")
-    docs = profiles_stream.stream()
-    for doc in docs:
-        data = doc.to_dict()
-        if data["uid"] == ID:
-            deviceToken=data['token']
-            massagee=userName+" liked your post"
-            body=massage.createBody(deviceToken,massagee,title="someone liked your post")
-            response=massage.massaging(body)
-            data={userName : massagee}
-            db.collection('users').document(ID).collection('notification').document().set(data)
-            break
+    doc_ref=db.collection(u'users').document(ID)
+    get_token=doc_ref.get({u'token'})
+    token=u'{}'.format(get_token.to_dict()['token'])
+    massagee=userName+" liked your post"
+    body=massage.createBody(token,massagee,title="someone liked your post")
+    response=massage.massaging(body)
+    data={userName : massagee}
+    db.collection('users').document(ID).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/comment", methods=["POST"])
 def WrittenComment():
@@ -241,18 +237,14 @@ def WrittenComment():
     id=request.form['id']#id for the person who created the post
     return write_comment(userName,comment,id)
 def write_comment(userName,comment,id):
-    profiles_stream = db.collection("users")
-    docs = profiles_stream.stream()
-    for doc in docs:
-        data = doc.to_dict()
-        if data["uid"] == id:
-            deviceToken=data['token']
-            massagee=comment
-            body=massage.createBody(deviceToken,massagee,title=userName+" comment in your post")
-            response=massage.massaging(body)
-            data={userName : massagee}
-            db.collection('users').document(id).collection('notification').document().set(data)
-            break
+    doc_ref=db.collection(u'users').document(ID)
+    get_token=doc_ref.get({u'token'})
+    token=u'{}'.format(get_token.to_dict()['token'])
+    massagee=comment
+    body=massage.createBody(token,massagee,title=userName+" comment in your post")
+    response=massage.massaging(body)
+    data={userName : massagee}
+    db.collection('users').document(id).collection('notification').document().set(data)
     return jsonify({'mass':response})
 
 
