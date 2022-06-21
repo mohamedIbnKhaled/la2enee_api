@@ -46,6 +46,7 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+
 @app.route("/finderPost", methods=["POST"])
 def upload_image_finder():
     if "file" not in request.files:
@@ -220,16 +221,40 @@ def put_likes_infire():
     return likes(id,userName)
 
 def likes(ID,userName):
-    user=db.collection("users").document(ID).get()
-    deviceToken=user['token']
-    massagee=userName+" liked your post"
-    body=massage.createBody(deviceToken,massagee,title="someone liked your post")
-    print(type(body))
-    response=massage.massaging(body)
-    data={userName : massagee}
-    print(docName.title())
-    user.collection('notification').document(f'likes').add(data)
+    profiles_stream = db.collection("users")
+    docs = profiles_stream.stream()
+    for doc in docs:
+        data = doc.to_dict()
+        if data["uid"] == ID:
+            deviceToken=data['token']
+            massagee=userName+" liked your post"
+            body=massage.createBody(deviceToken,massagee,title="someone liked your post")
+            response=massage.massaging(body)
+            data={userName : massagee}
+            db.collection('users').document(ID).collection('notification').document().set(data)
+            break
     return jsonify({'mass':response})
+@app.route("/comment", methods=["POST"])
+def WrittenComment():
+    userName=request.form['userName']
+    comment=request.form['comment']
+    id=request.form['id']#id for the person who created the post
+    return write_comment(userName,comment,id)
+def write_comment(userName,comment,id):
+    profiles_stream = db.collection("users")
+    docs = profiles_stream.stream()
+    for doc in docs:
+        data = doc.to_dict()
+        if data["uid"] == id:
+            deviceToken=data['token']
+            massagee=comment
+            body=massage.createBody(deviceToken,massagee,title=userName+" comment in your post")
+            response=massage.massaging(body)
+            data={userName : massagee}
+            db.collection('users').document(id).collection('notification').document().set(data)
+            break
+    return jsonify({'mass':response})
+
 
 
 if __name__ == "__main__":
