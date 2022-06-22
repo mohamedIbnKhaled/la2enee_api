@@ -115,16 +115,13 @@ def finder_post(file_stream, uid):
         doc_ref= db.collection("users").document(seekeruid)
         get_token=doc_ref.get({u'token'})
         seekerToken =u'{}'.format(get_token.to_dict()['token'])
-        result_ref = db.collection("results").document()
+        result_ref = db.collection("matched").document()
         result_ref.set(
             {
                 "uid_finder": uid,
                 "uid_seeker": seekeruid,
-                "result": True,
                 "known_vector": vector_known_list,
                 "unknown_vector": vector_unknown_list,
-                "findertoken":finderToken,
-                "seekertoken":seekerToken
             }
         )
         massageefinder="we happy to say that we found one you are searching for  for you 😊"
@@ -134,6 +131,10 @@ def finder_post(file_stream, uid):
         body= massage.createBody(seekerToken, massageeseeker,title="founded")
         response=massage.massaging(body)
         docName.reference.delete()
+        data={'body' : massageefinder,'id':uid}
+        db.collection('users').document(seekeruid).collection('notification').document().set(data)
+        data={'body' : massageeseeker,'id':seekeruid}
+        db.collection('users').document(uid).collection('notification').document().set(data)
         return jsonify({"result": True,"finderID": uid,"seekerID":seekeruid})
 
     else:
@@ -175,25 +176,26 @@ def seeker_post(file_stream, uid):
         doc_ref = db.collection("users").document(finderuid)
         get_token=doc_ref.get({u'token'})
         finderToken =u'{}'.format(get_token.to_dict()['token'])
-        result_ref = db.collection("results").document()
+        result_ref = db.collection("matched").document()
         result_ref.set(
             {
                 "uid_finder": finderuid,
                 "uid_seeker": uid,
-                "result": True,
                 "known_vector": vector_known_list,
                 "unknown_vector": vector_unknown_list,
-                "findertoken":finderToken,
-                "seekertoken":seekerToken
             }
         )
-        massageefinder="we happy to say that we found one you are searching for  for you 😊"
+        massageefinder="we happy to say that we found one you are searching for  😊"
         massageeseeker="we happy to say that we know the name of person you found 😊"
         body= massage.createBody(finderToken, massageefinder,title="founded")
         response=massage.massaging(body)
         body= massage.createBody(seekerToken, massageeseeker,title="founded")
         response=massage.massaging(body)
         docName.reference.delete()
+        data={'body ': massageefinder,'id' : finderuid}
+        db.collection('users').document(uid).collection('notification').document().set(data)
+        data={'body' : massageeseeker,'id':uid}
+        db.collection('users').document(finderuid).collection('notification').document().set(data)
         return jsonify({"result": True,"finderID":finderuid,"seekerID":uid})
     else:
         doc_ref = db.collection("known_vectors").document(uid)
