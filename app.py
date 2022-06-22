@@ -109,19 +109,12 @@ def finder_post(file_stream, uid):
             break
     vector_unknown_list = vector_unknown.tolist()
     if result == True:
-        profiles_stream = db.collection("users")
-        docs = profiles_stream.stream()
-        for doc in docs:
-            data = doc.to_dict()
-            if data["uid"] == uid:
-                finderToken = data["token"]
-                break
-        docs = profiles_stream.stream()
-        for doc in docs:
-            data = doc.to_dict()
-            if data["uid"] == seekeruid:
-                seekerToken = data["token"]
-                break
+        doc_ref = db.collection("users").document(uid)
+        get_token=doc_ref.get({u'token'})
+        finderToken =u'{}'.format(get_token.to_dict()['token'])
+        doc_ref= db.collection("users").document(seekeruid)
+        get_token=doc_ref.get({u'token'})
+        seekerToken =u'{}'.format(get_token.to_dict()['token'])
         result_ref = db.collection("results").document()
         result_ref.set(
             {
@@ -176,19 +169,12 @@ def seeker_post(file_stream, uid):
             break
     vector_known_list = vector_known.tolist()
     if result == True:
-        profiles_stream = db.collection("users")
-        docs = profiles_stream.stream()
-        for doc in docs:
-            data = doc.to_dict()
-            if data["uid"] == uid:
-                seekerToken = data["token"]
-                break
-        docs = profiles_stream.stream()
-        for doc in docs:
-            data = doc.to_dict()
-            if data["uid"] == finderuid:
-                finderToken = data["token"]
-                break
+        doc_ref = db.collection("users").document(uid)
+        get_token=doc_ref.get({u'token'})
+        seekerToken =u'{}'.format(get_token.to_dict()['token'])
+        doc_ref = db.collection("users").document(finderuid)
+        get_token=doc_ref.get({u'token'})
+        finderToken =u'{}'.format(get_token.to_dict()['token'])
         result_ref = db.collection("results").document()
         result_ref.set(
             {
