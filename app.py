@@ -131,9 +131,9 @@ def finder_post(file_stream, uid):
         body= massage.createBody(seekerToken, massageeseeker,title="founded")
         response=massage.massaging(body)
         docName.reference.delete()
-        data={'body' : massageefinder,'id':uid}
+        data={'body' : massageefinder,'id':uid,'type':'match'}
         db.collection('users').document(seekeruid).collection('notification').document().set(data)
-        data={'body' : massageeseeker,'id':seekeruid}
+        data={'body' : massageeseeker,'id':seekeruid,'type':'match'}
         db.collection('users').document(uid).collection('notification').document().set(data)
         return jsonify({"result": True,"finderID": uid,"seekerID":seekeruid})
 
@@ -192,9 +192,9 @@ def seeker_post(file_stream, uid):
         body= massage.createBody(seekerToken, massageeseeker,title="founded")
         response=massage.massaging(body)
         docName.reference.delete()
-        data={'body ': massageefinder,'id' : finderuid}
+        data={'body ': massageefinder,'id' : finderuid,'type':'match'}
         db.collection('users').document(uid).collection('notification').document().set(data)
-        data={'body' : massageeseeker,'id':uid}
+        data={'body' : massageeseeker,'id':uid,'type':'match'}
         db.collection('users').document(finderuid).collection('notification').document().set(data)
         return jsonify({"result": True,"finderID":finderuid,"seekerID":uid})
     else:
@@ -215,7 +215,7 @@ def likes(ID,userName):
     massagee=userName+" liked your post"
     body=massage.createBody(token,massagee,title="someone liked your post")
     response=massage.massaging(body)
-    data={'likes' : massagee}
+    data={'likes' : massagee,'type':'like'}
     db.collection('users').document(ID).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/comment", methods=["POST"])
@@ -231,7 +231,7 @@ def write_comment(userName,comment,id):
     massagee=comment
     body=massage.createBody(token,massagee,title=userName+" comment in your post")
     response=massage.massaging(body)
-    data={'comment' : massagee}
+    data={'comment' : massagee,'type':'comment'}
     db.collection('users').document(id).collection('notification').document().set(data)
     return jsonify({'mass':response})
 
