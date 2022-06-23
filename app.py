@@ -215,7 +215,7 @@ def likes(ID,userName):
     massagee=userName+" liked your post"
     body=massage.createBody(token,massagee,title="someone liked your post")
     response=massage.massaging(body)
-    data={userName : massagee}
+    data={'likes' : massagee}
     db.collection('users').document(ID).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/comment", methods=["POST"])
@@ -231,7 +231,7 @@ def write_comment(userName,comment,id):
     massagee=comment
     body=massage.createBody(token,massagee,title=userName+" comment in your post")
     response=massage.massaging(body)
-    data={userName : massagee}
+    data={'comment' : massagee}
     db.collection('users').document(id).collection('notification').document().set(data)
     return jsonify({'mass':response})
 
