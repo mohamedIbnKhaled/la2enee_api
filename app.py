@@ -88,7 +88,7 @@ def finder_post(file_stream, uid):
     if len(vector_unknown) > 0:
         vector_unknown = vector_unknown[0]
     else:
-        return jsonify({"massage":"there is no faces in the image"})
+        return jsonify({"massage":"there is no faces in the image"}),400
     # start comparing between this vector and the known vetcors from firestore
     result = False
     vectors_known_stream = db.collection("known_vectors")
@@ -135,7 +135,7 @@ def finder_post(file_stream, uid):
         db.collection('users').document(seekeruid).collection('notification').document().set(data)
         data={'body' : massageeseeker,'id':seekeruid,'type':'match'}
         db.collection('users').document(uid).collection('notification').document().set(data)
-        return jsonify({"result": True,"finderID": uid,"seekerID":seekeruid})
+        return jsonify({"result": True})
 
     else:
         # if there is no known_vector that same as unknown so upload this vector so we can use it again
@@ -152,7 +152,7 @@ def seeker_post(file_stream, uid):
     if len(vector_known) > 0:
         vector_known = vector_known[0]
     else:
-        return jsonify({"massage":"there is no faces in the image"})
+        return jsonify({"massage":"there is no faces in the image"}),400
     result = False
     finderuid = ""
     finderToken = ""
@@ -196,7 +196,7 @@ def seeker_post(file_stream, uid):
         db.collection('users').document(uid).collection('notification').document().set(data)
         data={'body' : massageeseeker,'id':uid,'type':'match'}
         db.collection('users').document(finderuid).collection('notification').document().set(data)
-        return jsonify({"result": True,"finderID":finderuid,"seekerID":uid})
+        return jsonify({"result": True,})
     else:
         doc_ref = db.collection("known_vectors").document(uid)
         doc_ref.set({"uid": uid, "vector": vector_known_list})
