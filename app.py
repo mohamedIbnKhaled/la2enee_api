@@ -140,7 +140,7 @@ def finder_post(file_stream, uid):
     else:
         # if there is no known_vector that same as unknown so upload this vector so we can use it again
         # convert np array vector to list to upload to firestore
-        doc_ref = db.collection("unknown_vectors").document(uid)
+        doc_ref = db.collection("unknown_vectors").document()
         doc_ref.set({"uid": uid, "vector": vector_unknown_list})
         return jsonify({"result": False})
 
@@ -198,7 +198,7 @@ def seeker_post(file_stream, uid):
         db.collection('users').document(finderuid).collection('notification').document().set(data)
         return jsonify({"result": True,})
     else:
-        doc_ref = db.collection("known_vectors").document(uid)
+        doc_ref = db.collection("known_vectors").document()
         doc_ref.set({"uid": uid, "vector": vector_known_list})
         return jsonify({"massage": False})
 
