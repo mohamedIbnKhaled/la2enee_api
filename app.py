@@ -222,15 +222,14 @@ def likes(ID,userName):
 @app.route("/comment", methods=["POST"])
 def WrittenComment():
     userName=request.form['userName']
-    comment=request.form['comment']
     id=request.form['id']#id for the person who created the post
-    return write_comment(userName,comment,id)
-def write_comment(userName,comment,id):
+    return write_comment(userName,id)
+def write_comment(userName,id):
     doc_ref=db.collection(u'users').document(id)
     get_token=doc_ref.get({u'token'})
     token=u'{}'.format(get_token.to_dict()['token'])
-    massagee=comment
-    body=massage.createBody(token,massagee,title=userName+" comment in your post")
+    massagee=userName+" comment in your post"
+    body=massage.createBody(token,massagee,title="comment")
     response=massage.massaging(body)
     data={'comment' : massagee,'type':'comment','time':datetime.now()}
     db.collection('users').document(id).collection('notification').document().set(data)
