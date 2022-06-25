@@ -6,12 +6,9 @@ load_dotenv()
 def createBody(deviceToken,massage,title):
     body = {
         "notification": {"title": title, "body":massage ,
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
         "sound": "Tri-tone", },
         "to": deviceToken,
         "priority": "high",
-        "screen": "screenA",
-        
     }
     return body
 
