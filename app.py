@@ -216,7 +216,7 @@ def likes(ID,userName):
     massagee=userName+" liked your post"
     body=massage.createBody(token,massagee,title="someone liked your post")
     response=massage.massaging(body)
-    data={'likes' : massagee,'type':'like','time':datetime.now()}
+    data={'body' : massagee,'type':'like','time':datetime.now()}
     db.collection('users').document(ID).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/comment", methods=["POST"])
@@ -231,10 +231,26 @@ def write_comment(userName,id):
     massagee=userName+" comment in your post"
     body=massage.createBody(token,massagee,title="comment")
     response=massage.massaging(body)
-    data={'comment' : massagee,'type':'comment','time':datetime.now()}
+    data={'body' : massagee,'type':'comment','time':datetime.now()}
     db.collection('users').document(id).collection('notification').document().set(data)
     return jsonify({'mass':response})
+@app.route("/edit", methods=["POST"])
+def editpost():
+    typeOfEdit=request.form['typeOfEdit']#it will be username or the image
+    editIt=request.form['editIt']#the value to update
+    id=request.form['id']#id for the person who created the post
+    return editme(id,typeOfEdit,editIt)
 
+def editme(ID,typeOfEdit,editIt):
+    docs = db.collection('Userposts').where(u'uid',u'==',ID)
+    if(typeOfEdit=="userName"):
+        for doc in docs.stream():
+            doc.reference.update({"userName":editIt})
+    else :
+         for doc in docs.stream():
+            doc.reference.update({"profileimage":editIt})
+
+    return jsonify({'mass':"lol"})
 
 
 if __name__ == "__main__":

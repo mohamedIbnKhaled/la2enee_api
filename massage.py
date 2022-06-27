@@ -5,8 +5,7 @@ import json
 load_dotenv()
 def createBody(deviceToken,massage,title):
     body = {
-        "notification": {"title": title, "body":massage ,
-        "sound": "Tri-tone", },
+        "notification": {"title": title, "body":massage  },
         "to": deviceToken,
         "priority": "high",
     }
