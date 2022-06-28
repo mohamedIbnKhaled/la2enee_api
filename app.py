@@ -207,31 +207,33 @@ def seeker_post(file_stream, uid):
 def put_likes_infire():
     userName=request.form['userName']
     id=request.form['id']#id for the person who created the post
-    return likes(id,userName)
+    postid=request.form['postid']
+    return likes(id,userName,postid)
 
-def likes(ID,userName):
+def likes(ID,userName,postid):
     doc_ref=db.collection(u'users').document(ID)
     get_token=doc_ref.get({u'token'})
     token=u'{}'.format(get_token.to_dict()['token'])
     massagee=userName+" liked your post"
     body=massage.createBody(token,massagee,title="someone liked your post")
     response=massage.massaging(body)
-    data={'body' : massagee,'type':'like','time':datetime.now()}
+    data={'body' : massagee,'type':'like','time':datetime.now(),'postId':postid}
     db.collection('users').document(ID).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/comment", methods=["POST"])
 def WrittenComment():
     userName=request.form['userName']
     id=request.form['id']#id for the person who created the post
+    postid=request.form['postid']
     return write_comment(userName,id)
-def write_comment(userName,id):
+def write_comment(userName,id,postId):
     doc_ref=db.collection(u'users').document(id)
     get_token=doc_ref.get({u'token'})
     token=u'{}'.format(get_token.to_dict()['token'])
     massagee=userName+" comment in your post"
     body=massage.createBody(token,massagee,title="comment")
     response=massage.massaging(body)
-    data={'body' : massagee,'type':'comment','time':datetime.now()}
+    data={'body' : massagee,'type':'comment','time':datetime.now(),'postId':postid}
     db.collection('users').document(id).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/edit", methods=["POST"])
