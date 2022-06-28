@@ -233,7 +233,7 @@ def write_comment(userName,id,postId):
     massagee=userName+" comment in your post"
     body=massage.createBody(token,massagee,title="comment")
     response=massage.massaging(body)
-    data={'body' : massagee,'type':'comment','time':datetime.now(),'postId':postid}
+    data={'body' : massagee,'type':'comment','time':datetime.now(),'postId':postId}
     db.collection('users').document(id).collection('notification').document().set(data)
     return jsonify({'mass':response})
 @app.route("/edit", methods=["POST"])
