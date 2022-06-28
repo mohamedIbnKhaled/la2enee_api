@@ -225,7 +225,7 @@ def WrittenComment():
     userName=request.form['userName']
     id=request.form['id']#id for the person who created the post
     postid=request.form['postid']
-    return write_comment(userName,id)
+    return write_comment(userName,id,postid)
 def write_comment(userName,id,postId):
     doc_ref=db.collection(u'users').document(id)
     get_token=doc_ref.get({u'token'})
