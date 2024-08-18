@@ -32,14 +32,6 @@ Uploads an image and attempts to find a match in the database.
 
 Uploads an image with known identity and attempts to find matching vectors in the database.
 
-**Form Data:**
-- `file`: Image file
-- `uid`: User ID of the person uploading the image
-
-**Responses:**
-- `200 OK`: Match found or vector saved
-- `400 Bad Request`: Invalid image or no faces found
-
 ### `POST /likes`
 
 Records a like on a post and sends a notification.
